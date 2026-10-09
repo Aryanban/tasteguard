@@ -144,10 +144,10 @@ flowchart TD
 flowchart TD
     subgraph "POWER vs. INTEREST GRID"
         direction TB
-        Q1["HIGH POWER / HIGH INTEREST<br/><b>KEY PLAYERS (Manage Closely)</b><br/>• Brand CMOs & Heads of Sponsorship (Sarah)<br/>• Live Nation / Festival Promoters (Marcus)<br/>• Lead Hackathon Judges (Calacanis, Abrams, Boehly)"]
-        Q2["HIGH POWER / LOW INTEREST<br/><b>MEET THEIR NEEDS (Keep Satisfied)</b><br/>• Chief Legal Officers / Corporate Counsel (IP & 0-PII)<br/>• OpenAI Board / Governance Reviewers (Nicole Seligman)<br/>• Enterprise Procurement & CFOs"]
-        Q3["LOW POWER / HIGH INTEREST<br/><b>KEEP INFORMED (Showcase Utility)</b><br/>• Artist Creative Directors & Tour Managers (Elena)<br/>• Subculture Communities & Fanbases<br/>• On-site Event Production Crews"]
-        Q4["LOW POWER / LOW INTEREST<br/><b>MONITOR (Minimal Effort)</b><br/>• General Public / Passive Listeners<br/>• Third-party Banner Print Vendors"]
+        Q1["HIGH POWER / HIGH INTEREST - KEY PLAYERS (Manage Closely)<br/>• Brand CMOs & Heads of Sponsorship (Sarah)<br/>• Live Nation / Festival Promoters (Marcus)<br/>• Lead Hackathon Judges (Calacanis, Abrams, Boehly)"]
+        Q2["HIGH POWER / LOW INTEREST - MEET THEIR NEEDS (Keep Satisfied)<br/>• Chief Legal Officers / Corporate Counsel (IP & 0-PII)<br/>• OpenAI Board / Governance Reviewers (Nicole Seligman)<br/>• Enterprise Procurement & CFOs"]
+        Q3["LOW POWER / HIGH INTEREST - KEEP INFORMED (Showcase Utility)<br/>• Artist Creative Directors & Tour Managers (Elena)<br/>• Subculture Communities & Fanbases<br/>• On-site Event Production Crews"]
+        Q4["LOW POWER / LOW INTEREST - MONITOR (Minimal Effort)<br/>• General Public / Passive Listeners<br/>• Third-party Banner Print Vendors"]
     end
 ```
 
