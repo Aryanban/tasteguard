@@ -7,6 +7,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "qloo:setup": "npx @qloo/qloo-harness setup --qloo",
+    "qloo:doctor": "npx @qloo/qloo-harness doctor",
+    "qloo:status": "npx @qloo/qloo-harness setup --status",
+    "qloo:mcp": "npx @qloo/qloo-harness mcp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
