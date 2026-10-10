@@ -17,13 +17,16 @@ import {
   ChevronDown,
   ChevronUp,
   FileText,
-  ExternalLink
+  ExternalLink,
+  Key
 } from 'lucide-react'
 
 import { AgentTrace } from './components/AgentTrace'
 import { FrictionHeatmap, DomainFriction } from './components/FrictionHeatmap'
 import { MitigationCard, MitigationConcept } from './components/MitigationCard'
 import { ComplianceCert, ComplianceAudit } from './components/ComplianceCert'
+import { StakeholderLens } from './components/StakeholderLens'
+import { ApiKeyModal } from './components/ApiKeyModal'
 import { TraceEvent } from '@/lib/qloo/types'
 
 interface ExecutiveBrief {
@@ -67,6 +70,20 @@ const PRESETS = [
     label: 'Red Bull x Fred again..',
     tag: 'Club & Energy Synergy',
     color: 'border-cyan-500/50 text-cyan-400 bg-cyan-950/20'
+  },
+  {
+    brand: 'Liquid Death',
+    artist: 'Zach Bryan',
+    label: 'Liquid Death x Zach Bryan',
+    tag: 'Heartland Rebellious Water',
+    color: 'border-indigo-500/50 text-indigo-400 bg-indigo-950/20'
+  },
+  {
+    brand: 'Tesla',
+    artist: 'Kendrick Lamar',
+    label: 'Tesla x Kendrick Lamar',
+    tag: 'Minimalism vs Urban Tech',
+    color: 'border-purple-500/50 text-purple-400 bg-purple-950/20'
   }
 ]
 
@@ -90,11 +107,34 @@ export default function Home() {
   const [trace, setTrace] = useState<TraceEvent[]>([])
   const [brief, setBrief] = useState<ExecutiveBrief | null>(null)
   const [copied, setCopied] = useState(false)
+  const [apiKey, setApiKey] = useState('')
+  const [showKeyModal, setShowKeyModal] = useState(false)
 
-  // Auto-run default demo on mount if not ran yet
+  // Load stored API key and auto-run default demo on mount
   useEffect(() => {
+    try {
+      const stored = localStorage.getItem('tasteguard_qloo_api_key')
+      if (stored) {
+        setApiKey(stored)
+      }
+    } catch {
+      // ignore
+    }
     runAnalysis('Lexus', 'Billie Eilish')
   }, [])
+
+  const handleSaveApiKey = (key: string) => {
+    setApiKey(key)
+    try {
+      if (key) {
+        localStorage.setItem('tasteguard_qloo_api_key', key)
+      } else {
+        localStorage.removeItem('tasteguard_qloo_api_key')
+      }
+    } catch {
+      // ignore
+    }
+  }
 
   const runAnalysis = async (brand: string, artist: string, customWeights?: Record<string, number>) => {
     setIsRunning(true)
@@ -110,7 +150,8 @@ export default function Home() {
 
     try {
       // 1. Native Next.js App Router SSE Streaming route (relative path works on Vercel and local)
-      const streamUrl = `/api/stream?brand=${encodeURIComponent(brand)}&artist=${encodeURIComponent(artist)}&weights=${encodeURIComponent(JSON.stringify(normalizedWeights))}`
+      const keyQuery = apiKey ? `&apiKey=${encodeURIComponent(apiKey)}` : ''
+      const streamUrl = `/api/stream?brand=${encodeURIComponent(brand)}&artist=${encodeURIComponent(artist)}&weights=${encodeURIComponent(JSON.stringify(normalizedWeights))}${keyQuery}`
       const eventSource = new EventSource(streamUrl)
 
       eventSource.onmessage = (event) => {
@@ -157,7 +198,7 @@ export default function Home() {
       const res = await fetch('/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ brand, artist, weights: customWeights })
+        body: JSON.stringify({ brand, artist, weights: customWeights, apiKey: apiKey || undefined })
       })
 
       if (res.ok) {
@@ -304,6 +345,21 @@ export default function Home() {
                 </button>
               </>
             )}
+
+            <button
+              onClick={() => setShowKeyModal(true)}
+              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-mono font-medium rounded-lg border transition-all ${
+                apiKey
+                  ? 'bg-emerald-950/70 border-emerald-700/80 text-emerald-300 shadow-md shadow-emerald-950/30'
+                  : 'bg-[#131B2E] hover:bg-[#1A253E] border-slate-700 text-slate-200'
+              }`}
+              title="Configure Qloo Hackathon API Key"
+            >
+              <Key className="w-3.5 h-3.5 text-amber-400" />
+              <span>{apiKey ? 'Live Qloo Key Active' : 'API Key'}</span>
+              <span className={`w-2 h-2 rounded-full ${apiKey ? 'bg-emerald-400 animate-pulse' : 'bg-slate-500'}`} />
+            </button>
+
             <div className="px-3 py-2 bg-[#12192A] border border-slate-800 rounded-lg text-right hidden lg:block">
               <div className="text-[10px] font-mono text-slate-400 uppercase">Qloo Ground Truth</div>
               <div className="text-xs font-mono text-emerald-400 font-bold">250M+ Entities Connected</div>
@@ -471,6 +527,12 @@ export default function Home() {
 
               <ComplianceCert compliance={brief.compliance} />
 
+              <StakeholderLens
+                brandName={brief.brand_name}
+                artistName={brief.artist_name}
+                frictionScore={brief.composite_friction_score}
+              />
+
               {/* Raw Qloo Proof Inspector Drawer */}
               <div className="bg-[#0D1322] border border-slate-800 rounded-xl p-4 shadow-xl">
                 <button
@@ -523,6 +585,13 @@ export default function Home() {
           )}
         </div>
       </div>
+
+      <ApiKeyModal
+        isOpen={showKeyModal}
+        onClose={() => setShowKeyModal(false)}
+        apiKey={apiKey}
+        onSaveKey={handleSaveApiKey}
+      />
     </main>
   )
 }

@@ -13,6 +13,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const brand = searchParams.get('brand') || 'Lexus'
   const artist = searchParams.get('artist') || 'Billie Eilish'
+  const apiKey = searchParams.get('apiKey') || req.headers.get('x-qloo-api-key') || undefined
 
   let customWeights: Record<string, number> | undefined
   const weightsParam = searchParams.get('weights')
@@ -54,7 +55,8 @@ export async function GET(req: NextRequest) {
             })
             // Pacing for visual observation in UI
             await new Promise((r) => setTimeout(r, 280))
-          }
+          },
+          apiKey
         )
 
         // Final payload

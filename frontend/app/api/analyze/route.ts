@@ -11,6 +11,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
     const { brand, artist, weights } = body
+    const apiKey = body.apiKey || req.headers.get('x-qloo-api-key') || undefined
 
     if (!brand || !artist) {
       return NextResponse.json(
@@ -19,7 +20,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const result = await executeTasteGuardSwarm(brand, artist, weights)
+    const result = await executeTasteGuardSwarm(brand, artist, weights, undefined, apiKey)
 
     return NextResponse.json({
       brief: result.brief,

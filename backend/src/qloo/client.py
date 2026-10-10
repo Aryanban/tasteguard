@@ -71,9 +71,9 @@ class QlooClient:
         # 2. Query Qloo API if API key is provided
         if self.api_key and self.api_key != "your_qloo_api_key_here":
             url = f"{self.base_url}/search"
-            params = {"query": query}
+            params = {"query": query, "take": "10"}
             if entity_type:
-                params["type"] = entity_type
+                params["types"] = entity_type
 
             for attempt in range(3):
                 try:
@@ -148,8 +148,12 @@ class QlooClient:
         # 2. Live Qloo API call if credentials exist
         if self.api_key and self.api_key != "your_qloo_api_key_here":
             url = f"{self.base_url}/v2/insights"
+            # Qloo Insights API strictly requires filter.type. We query cross-domain entities (brands or places).
+            filter_type = "urn:entity:brand" if "artist" in entity.type else "urn:entity:artist"
             params = {
+                "filter.type": filter_type,
                 "signal.interests.entities": entity.id,
+                "take": "10",
             }
             try:
                 async with httpx.AsyncClient(timeout=15.0) as client:
@@ -172,6 +176,25 @@ class QlooClient:
         profile = self._generate_synthetic_profile(entity)
         self._profile_cache[entity.id] = profile
         return profile
+
+    async def compare_entities(self, entity_a_id: str, entity_b_id: str) -> Optional[Dict[str, Any]]:
+        """Call Qloo GET /v2/analysis/compare to analyze affinity overlap between two entities."""
+        if not self.api_key or self.api_key == "your_qloo_api_key_here":
+            return None
+        url = f"{self.base_url}/v2/analysis/compare"
+        params = {
+            "a.signal.interests.entities": entity_a_id,
+            "b.signal.interests.entities": entity_b_id,
+            "take": "10"
+        }
+        try:
+            async with httpx.AsyncClient(timeout=15.0) as client:
+                res = await client.get(url, headers=self._headers(), params=params)
+                if res.status_code == 200:
+                    return res.json()
+        except Exception as e:
+            logger.warning(f"Error querying /v2/analysis/compare: {e}")
+        return None
 
     def _parse_qloo_insights(self, data: Dict[str, Any], entity: QlooEntity) -> Dict[str, DomainAffinity]:
         """Convert raw Qloo API /v2/insights response into structured DomainAffinity objects."""
