@@ -1,90 +1,94 @@
-# TasteGuard — Cultural Friction Engine for Brand Partnerships
+# TasteGuard — Cultural Friction Engine for Brand & Creator Partnerships
+### Autonomous Multi-Agent Decision System, Vector Taste Decompositions & Qloo Graph Mitigation Strategies
 
-> **Qloo Agentic Hackathon Entry** · *Built with LangGraph, Next.js, and Qloo’s 250M+ Cultural Taste Graph*
+<div align="center">
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Engine: LangGraph](https://img.shields.io/badge/Orchestrator-LangGraph-indigo.svg)](https://github.com/langchain-ai/langgraph)
-[![Ground Truth: Qloo](https://img.shields.io/badge/Knowledge%20Graph-Qloo%20250M%2B-cyan.svg)](https://qloo.com)
-[![Privacy: 0--PII](https://img.shields.io/badge/Privacy-0--PII%20GDPR%2FCCPA-emerald.svg)](https://docs.qloo.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Engine: LangGraph](https://img.shields.io/badge/Orchestrator-LangGraph-indigo.svg?style=for-the-badge)](https://github.com/langchain-ai/langgraph)
+[![Ground Truth: Qloo](https://img.shields.io/badge/Knowledge%20Graph-Qloo%20250M%2B-cyan.svg?style=for-the-badge)](https://qloo.com)
+[![Privacy: 0--PII](https://img.shields.io/badge/Privacy-0--PII%20GDPR%2FCCPA-emerald.svg?style=for-the-badge)](https://docs.qloo.com)
+[![Next.js 14](https://img.shields.io/badge/Frontend-Next.js%2014-black.svg?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
+[![Python: 3.12+](https://img.shields.io/badge/Backend-Python%203.12%2B-3776ab.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org)
 
----
+<br />
 
-## 1. What TasteGuard Is
+**An autonomous multi-agent decision system evaluating Cultural Friction Scores (CFS) across brand and creator partnerships using 250M+ node cultural taste graphs.**
 
-**TasteGuard** is an autonomous multi-agent decision system that computes a **Cultural Friction Score (CFS)** between a brand's audience taste profile and an artist's audience taste profile using Qloo's cross-domain Taste Graph, then prescribes **Qloo-validated experiential mitigation strategies** to bridge the gaps before a multi-million dollar sponsorship deal is signed.
+[System Architecture](#-system-architecture) • [Mathematical Methodology](#-mathematical-methodology) • [Agent Swarm Specification](#-the-6-agent-langgraph-swarm) • [Technical Specifications](#-technical-specifications--engineering-decisions) • [Quickstart Guide](#-quickstart--local-setup) • [Portfolio & Showcase](#-engineering-portfolio--technical-evaluation-showcase)
 
-### The Core Moat: Fit vs. Friction
-* **Existing tools measure *fit*:** A single superficial score telling you whether two entities match.
-* **TasteGuard measures *friction*:** A domain-by-domain vector decomposition showing **where and why a partnership will break**, backed by mathematical provenance, and how to fix it with targeted on-site activations.
-
-```
-┌─────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                 THE TASTEGUARD LANGGRAPH FLOW                               │
-└─────────────────────────────────────────────────────────────────────────────────────────────┘
-
-  [INPUT: Brand Name + Artist Name]
-         │
-         ▼
-  ┌──────────────┐
-  │  Agent 1     │  GET /search → resolve brand + artist to canonical Qloo URNs
-  │  Entity      │  Server-side caching & parameter sanitization
-  │  Resolver    │
-  └──────┬───────┘
-         │
-         ▼
-  ┌──────────────┐
-  │  Agent 2     │  Parallel GET /v2/insights calls:
-  │  Taste       │  • Brand audience profile across 7 lifestyle domains
-  │  Profiler    │  • Artist audience profile across 7 lifestyle domains
-  │              │  Returns: Affinity score vectors (0.0 to 1.0)
-  └──────┬───────┘
-         │
-         ▼
-  ┌──────────────┐
-  │  Agent 3     │  COMPUTE: Cultural Friction Vector
-  │  Friction    │  CFS(B, A) = Σ w_d · |P_b(d) - P_a(d)|
-  │  Analyst     │  Decompose into: 🟢 Green / 🟡 Yellow / 🔴 Red zones
-  │              │  Output: Friction Report with Qloo tag provenance
-  └──────┬───────┘
-         │
-         ▼
-  ┌──────────────┐
-  │  Agent 4     │  For each Red and Yellow friction zone:
-  │  Mitigation  │  • Synthesize bespoke on-site activation concept
-  │  Strategist  │  • Validate concept against Qloo graph affinity
-  │              │  • Assign verified match score & activation type
-  └──────┬───────┘
-         │
-         ▼
-  ┌──────────────┐
-  │  Agent 5     │  • Trace every claim to Qloo tag URN
-  │  Compliance  │  • Flag trademark and exclusive licensing risks
-  │  Auditor     │  • Confirm 100% 0-PII compliance (GDPR / CCPA)
-  └──────┬───────┘
-         │
-         ▼
-  ┌──────────────┐
-  │  Agent 6     │  Compile Shareable Executive Brief:
-  │  Synthesis   │  Friction Score + Heatmap + Mitigations + Compliance Cert
-  │  Agent       │
-  └──────┬───────┘
-         │
-         ▼
-  [OUTPUT: Shareable Due Diligence Brief & CMO Outbound]
-```
+</div>
 
 ---
 
-## 2. Mathematical Methodology
+## 📌 Executive Overview & Enterprise Problem Statement
+
+Multi-million dollar brand sponsorships and creator endorsements frequently fail because traditional influencer marketing tools measure only **superficial demographic overlap ("fit")**:
+1. **Tone-Deaf Brand Collisions**: Brands incinerate \$2M–\$10M in equity when partnerships collide with creator subcultures (e.g. legacy luxury auto pairing with strict zero-waste eco-activism).
+2. **Missing Friction Vectors**: A high aggregate "fit" score conceals dangerous domain-specific antipathies across music, fashion, dining, beverage, travel, and digital habits.
+3. **GDPR/CCPA Compliance Liabilities**: Querying individual consumer profiles introduces severe data privacy penalties.
+
+**TasteGuard** addresses this through an autonomous multi-agent decision pipeline:
+* **Cultural Friction Vector ($\text{CFS}$)**: Computes domain-by-domain divergence across 7 cultural lifestyle domains using a 250M+ node cultural graph.
+* **Deterministic Risk Zones**: Categorizes partnerships into Green (authentic overlap), Yellow (bridgeable divergence), and Red (high-risk brand dilution).
+* **Qloo-Validated Experiential Mitigations**: Synthesizes bespoke on-site activations (custom F&B menus, zero-proof sanctuaries, co-branded apparel capsules) back-tested against fan affinity vectors.
+* **100% 0-PII Architecture**: Queries aggregate cultural knowledge graphs without ingesting individual personal data.
+
+---
+
+## 🏗️ System Architecture
+
+```mermaid
+flowchart TD
+  subgraph InputLayer ["Partnership Input"]
+    Input["Brand Entity + Creator Entity"]
+  end
+
+  subgraph AgentSwarm ["6-Agent LangGraph Swarm"]
+    Agent1["Agent 1: Entity Resolver<br/>(GET /search → Canonical Qloo URNs)"]
+    Agent2["Agent 2: Taste Profiler<br/>(Parallel GET /v2/insights across 7 domains)"]
+    Agent3["Agent 3: Friction Analyst<br/>(Calculates CFS Vector & Categorizes Zones)"]
+    Agent4["Agent 4: Mitigation Strategist<br/>(Synthesizes On-Site Activations)"]
+    Agent5["Agent 5: Compliance Auditor<br/>(0-PII Verification & IP Clearance)"]
+    Agent6["Agent 6: Synthesis Agent<br/>(Compiles CMO Due Diligence Brief)"]
+  end
+
+  subgraph GraphLayer ["Cultural Knowledge Graph"]
+    QlooGraph[("Qloo 250M+ Entity Taste Graph")]
+    EntityCache[("In-Memory URN & Vector Cache")]
+  end
+
+  subgraph OutputLayer ["Executive Output"]
+    Brief["Shareable Due Diligence Brief & Live SSE Stream"]
+  end
+
+  Input --> Agent1
+  Agent1 --> EntityCache
+  Agent1 --> QlooGraph
+  Agent1 --> Agent2
+
+  Agent2 --> QlooGraph
+  Agent2 --> Agent3
+
+  Agent3 --> Agent4
+  Agent4 --> QlooGraph
+  Agent4 --> Agent5
+
+  Agent5 --> Agent6
+  Agent6 --> Brief
+```
+
+---
+
+## 📐 Mathematical Methodology
 
 The **Cultural Friction Score (CFS)** decomposes audience lifestyle alignment across 7 cultural domains ($d \in D$):
-* Music (Sonic & genre alignment)
-* Fashion (Visual style & dress code)
-* Dining (Hospitality & culinary preferences)
-* Beverage (On-site bar & beverage sponsorship)
-* Travel (Tour destinations & transit preferences)
-* Tech (Digital habits & platform preferences)
-* Media (Entertainment genres & content consumption)
+* **Music**: Sonic genres, audio platforms, and live concert behaviors.
+* **Fashion**: Visual aesthetics, streetwear vs. formalwear preferences.
+* **Dining**: Culinary tastes, hospitality venues, and restaurant types.
+* **Beverage**: On-site bar, non-alcoholic elixirs, and sponsorship alignment.
+* **Travel**: Tour destinations, lodging standards, and transit modes.
+* **Tech**: Digital platforms, hardware ecosystems, and gaming habits.
+* **Media**: Entertainment genres, streaming formats, and literature.
 
 ### Formula
 $$\text{CFS}(B, A) = 100 \times \sum_{d \in D} w_d \cdot |P_b(d) - P_a(d)|$$
@@ -101,10 +105,10 @@ Where:
 
 ---
 
-## 3. The 6-Agent LangGraph Swarm
+## 🤖 The 6-Agent LangGraph Swarm
 
-1. **Agent 1 (Entity Resolver):** Resolves queries to Qloo canonical URNs (`/search`) with server-side in-memory caching and 429 exponential backoff.
-2. **Agent 2 (Taste Profiler):** Fetches multidimensional affinity vectors (`/v2/insights`) across 7 cultural domains.
+1. **Agent 1 (Entity Resolver):** Resolves ambiguous entity names to canonical Qloo URNs (`/search`) with server-side in-memory caching and exponential 429 backoff.
+2. **Agent 2 (Taste Profiler):** Fetches multidimensional affinity vectors (`/v2/insights`) across 7 cultural domains in parallel.
 3. **Agent 3 (Friction Analyst):** Executes vector decomposition, delta calculations, zone categorizations, and evidence tag linking.
 4. **Agent 4 (Mitigation Strategist):** Generates bespoke experiential activations (Experiential Lounges, Co-Branded Capsules, Custom F&B Menus) back-tested against Qloo affinities.
 5. **Agent 5 (Compliance Auditor):** Verifies 0-PII adherence, checks for trademark/venue exclusivity conflicts, and creates an audit trail.
@@ -112,61 +116,34 @@ Where:
 
 ---
 
-## 4. Competitive Differentiation Matrix
+## 🛠️ Technical Specifications & Engineering Decisions
 
-| Feature | AURA / CultureGuard | CultOS | Cold-Open | Headliner | **TasteGuard** |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| Brand-Artist Matching | ✅ | ✅ | ✅ | ✅ | **✅** |
-| Single Fit Score | ✅ | ❌ | ❌ | ❌ | **✅** |
-| **Domain-Level Friction Vector** | ❌ | ❌ | ❌ | ❌ | **✅ (Core Moat)** |
-| Anti-Affinity Detection | ❌ | Binary | ❌ | ❌ | **✅ (Quantified)** |
-| **Qloo-Validated Mitigations** | ❌ | ❌ | ❌ | ❌ | **✅** |
-| IP & Licensing Risk Flags | ❌ | ❌ | ❌ | ❌ | **✅** |
-| Real-time Agent Reasoning Trace | ❌ | ❌ | ❌ | ❌ | **✅ (Live SSE)** |
-| **0-PII Explicit Audit Certificate** | ❌ | ❌ | ❌ | ❌ | **✅** |
+| Dimension | Engineering Decision | Rationale |
+| :--- | :--- | :--- |
+| **Agent Framework** | LangGraph (Python 3.12+) | State-machine multi-agent orchestration with conditional branching and memory checkpoints. |
+| **Frontend Dashboard** | Next.js 14 (App Router) + Tailwind CSS | Real-time Server-Sent Events (SSE) reasoning trace streaming and responsive radar charts. |
+| **Knowledge Graph** | Qloo 250M+ Cultural Taste Graph | 0-PII aggregate affinity vectors across cross-domain entertainment and lifestyle entities. |
+| **Resilience & Rate Limits** | Server-side URN caching + 429 exponential backoff | Prevents API throttling; guarantees sub-second response times for cached entities. |
+| **Privacy Architecture** | 100% 0-PII Compliance | Zero personal data ingestion, eliminating GDPR and CCPA exposure for enterprise brands. |
 
 ---
 
-## 5. Boardroom & Judge Decision Intelligence
+## ⚡ Competitive Differentiation Matrix
 
-TasteGuard addresses the real-world operational and economic incentives of the hackathon judging panel:
-
-* **Michael Abrams (EVP Live Nation): Tour Margin & Concession Impact**
-  * *Context:* Live music touring operates on thin **3.3% margins** with **+30–40% tour cost inflation**. Live Nation generated \$845M AOI from sponsorship and ancillary spend.
-  * *TasteGuard Solution:* Neutralizes high-friction sponsor signage by prescribing on-site experiential activations (e.g., zero-proof elixir lounges, lathe-cut vinyl recording booths) that increase fan on-site dwell time by **+22%** and concession velocity by **+18%**.
-* **Jason Calacanis (Angel Investor & SaaS Specialist): Unit Economics & Loss Prevention**
-  * *Context:* Brands incinerate \$2M–\$10M in brand equity on tone-deaf celebrity endorsements.
-  * *TasteGuard Solution:* Quantified due diligence SaaS ($36,000/yr enterprise ACV, 92% gross margin). Single averted disaster yields >50x customer payback.
-* **Nicole Seligman (OpenAI Board / former Sony GC): Legal Governance & 0-PII Immunity**
-  * *Context:* Corporate brands cannot ingest individual consumer PII without severe GDPR/CCPA liability.
-  * *TasteGuard Solution:* 100% 0-PII architecture querying aggregate cultural affinity graphs. Agent 5 automatically audits venue exclusivity and co-branding trademark clearance before contracts are signed.
-* **Mike Diolosa (Qloo CTO): Qloo API Contract Rigor**
-  * *Context:* Strict hackathon contract (`https://hackathon.api.qloo.com`, `X-Api-Key`, canonical `filter.type`, zero legacy `/recs`).
-  * *TasteGuard Solution:* Native support for `GET /search?types=urn:entity:...`, `GET /v2/insights?filter.type=...&signal.interests.entities=...`, and `GET /v2/analysis/compare`, backed by exponential 429 backoff and 0% failure demo fallbacks.
+| Feature | Legacy Influencer Tools | CultOS | Cold-Open | **TasteGuard** |
+| :--- | :---: | :---: | :---: | :---: |
+| Brand-Artist Matching | ✅ | ✅ | ✅ | **✅** |
+| Single Fit Score | ✅ | ❌ | ❌ | **✅** |
+| **Domain-Level Friction Vector** | ❌ | ❌ | ❌ | **✅ (Core Moat)** |
+| Anti-Affinity Detection | ❌ | Binary | ❌ | **✅ (Quantified)** |
+| **Graph-Validated Mitigations** | ❌ | ❌ | ❌ | **✅** |
+| IP & Licensing Risk Flags | ❌ | ❌ | ❌ | **✅** |
+| Real-Time Agent Reasoning Trace | ❌ | ❌ | ❌ | **✅ (Live SSE)** |
+| **0-PII Explicit Audit Certificate** | ❌ | ❌ | ❌ | **✅** |
 
 ---
 
-## 6. Official Qloo Harness Integration
-
-TasteGuard includes native scripts for `@qloo/qloo-harness` (v0.1.26+):
-
-```bash
-# Verify local environment and API connectivity
-npm run qloo:doctor
-
-# Configure event-issued hackathon credentials
-npm run qloo:setup
-
-# Check active Qloo configuration status
-npm run qloo:status
-
-# Start canonical Qloo MCP (Model Context Protocol) stdio server
-npm run qloo:mcp
-```
-
----
-
-## 7. Quickstart & Local Setup
+## 🚀 Quickstart & Local Setup
 
 ### Prerequisites
 * Node.js 18+ (Node 20+ recommended)
@@ -181,7 +158,7 @@ npm run dev
 ```
 Visit `http://localhost:3000` to interact with the TasteGuard dashboard.
 
-### 2. Python Backend & LangGraph Contracts (Optional Standalone)
+### 2. Python Backend & LangGraph Contracts
 ```bash
 cd backend
 python3 -m venv .venv
@@ -194,28 +171,27 @@ pytest tests/ -v
 
 ---
 
-## 8. Deployment to Vercel
+## 👨‍💻 Engineering Portfolio & Technical Evaluation Showcase
 
-TasteGuard is 100% self-contained in Next.js 14 App Router and deploys seamlessly to Vercel:
+**TasteGuard** was designed, architected, and built by **Aryan Bansal** as an advanced autonomous multi-agent decision platform. It serves as an end-to-end technical demonstration for:
+* **High-Bar Engineering Roles & Technical Job Evaluations**: Highlights mastery of multi-agent state machines (LangGraph), graph API consumption, vector mathematics, and clean asynchronous microservices (e.g. **Trilogy**, AI agent systems, and full-stack software engineering roles).
+* **Competitive Hackathons & Innovation Showcases**: Showcases state-of-the-art agent swarms, real-time SSE streaming, and 0-PII enterprise governance.
 
-1. Import repository `https://github.com/Aryanban/tasteguard` in Vercel.
-2. Set **Root Directory** to `frontend`.
-3. (Optional) Set Environment Variable `QLOO_API_KEY` with your hackathon key from [Qloo Developer Guide](https://docs.qloo.com/reference/qloo-llm-hackathon-developer-guide#getting-your-api-key).
-4. Click **Deploy**.
+### 🌟 Core Engineering Competencies Demonstrated
 
----
-
-## 9. Curated Demonstration Pairs
-
-* 🟢 **Patagonia x Zach Bryan:** *Authentic Overlap (Score: 14)* — Shared heritage workwear, Americana folk roots, and camp culture.
-* 🟡 **Lexus x Billie Eilish:** *Manageable Friction (Score: 20)* — High cinema/media alignment, but luxury auto vs. strict vegan and eco-activism values require zero-emission sound sanctuary mitigations.
-* 🔴 **Rolex x 100 gecs:** *Severe Friction (Score: 65)* — Ultra-traditional Swiss horology colliding with chaotic internet hyperpop; flagged as high-risk deal.
-* 🟡 **Red Bull x Fred again..:** *Club & Energy Synergy* — Strong festival & nightlife alignment with streetwear fashion bridges.
-* 🟢 **Liquid Death x Zach Bryan:** *Heartland Rebellious Water* — Heavy metal punk attitude meets raw heartland neo-country roots.
-* 🟡 **Tesla x Kendrick Lamar:** *Minimalism vs Urban Tech* — Electric mobility and urban cultural resonance.
+| Competency Area | Architecture & Implementation | Engineering Impact |
+| :--- | :--- | :--- |
+| **Multi-Agent Orchestration** | 6-agent LangGraph pipeline with sequential and parallel branches | Decouples entity resolution, vector math, mitigation synthesis, and compliance auditing. |
+| **Vector Decomposition Math** | CFS formula calculating weighted absolute difference across 7 domains | Replaces superficial scalar matching with actionable, domain-specific risk heatmaps. |
+| **Real-Time Streaming** | Server-Sent Events (SSE) streaming agent reasoning steps to Next.js | Provides transparent, auditable decision-making traces for executive stakeholders. |
+| **Enterprise Privacy & Security** | 0-PII architectural invariant querying aggregate cultural graphs | 100% immune to GDPR/CCPA consumer data compliance liabilities. |
 
 ---
 
-## 10. Open Source License
+## 📄 License & Contact
 
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+* **Author**: Aryan Bansal ([GitHub: @Aryanban](https://github.com/Aryanban))
+* **Email**: `contact@dholeramap.com` / `aryan24120@iiitd.ac.in`
+* **Portfolio**: [webforge.me](https://www.webforge.me)
+* **LinkedIn**: [linkedin.com/in/aryan-bansal-b29b69370](https://www.linkedin.com/in/aryan-bansal-b29b69370/)
+* **License**: Released under the [MIT License](LICENSE).
